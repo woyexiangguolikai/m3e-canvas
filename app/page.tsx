@@ -201,6 +201,7 @@ function translateSnapshot(snap: Snapshot, lang: Lang): Snapshot {
         ...item,
         label: translateDefaultText(item.label, item.kind, "label", lang),
         ...(item.supporting !== undefined && { supporting: translateDefaultText(item.supporting, item.kind, "supporting", lang) }),
+        ...(item.content !== undefined && { content: translateDefaultText(item.content, item.kind, "content", lang) }),
         ...(item.tabs && { tabs: item.tabs.map((tab) => ({ ...tab, label: translateDefaultText(tab.label, item.kind, "tab", lang) })) }),
       })),
     })),
@@ -2199,7 +2200,7 @@ export default function Page() {
       arrive(next);
     } catch (e) {
       const m = e instanceof Error ? e.message : "";
-      showToast(m === "json" ? t("aiErrorJson", lang) : m === "refusal" ? t("aiErrorRefusal", lang) : m === "long" ? t("aiErrorLong", lang) : t("aiError", lang), 3200, "error");
+      showToast(m === "guide" ? t("aiErrorNetwork", lang) : aiErrorText(e, lang), 5200, "error");
     } finally {
       setDraftBusy(false);
     }

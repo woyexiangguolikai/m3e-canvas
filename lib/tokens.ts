@@ -475,6 +475,7 @@ export type Kind =
   | "fabMenu"
   | "toolbar"
   | "tabs"
+  | "miniProgramHeader"
   | "radio"
   | "badge";
 
@@ -509,6 +510,8 @@ export type KindSpec = {
   hasVariant: boolean;
   hasLabel: boolean;
   hasSupporting: boolean;
+  hasContent?: boolean;
+  hasPadding?: boolean;
   hasIcon: boolean;
   hasChecked?: boolean;
   /** carries a list of icon + label entries (navigation bar, tabs, FAB menu, toolbar) */
@@ -524,6 +527,7 @@ export type KindSpec = {
   defLabel: string;
   defIcon: string | null;
   defSupporting?: string;
+  defContent?: string;
   defIcon2?: string;
   defSize?: number;
   defVariant?: Variant;
@@ -654,6 +658,27 @@ export const KIND_SPEC: Record<Kind, KindSpec> = {
     defLabel: "タイトル",
     defIcon: "menu",
     defIcon2: "more_vert",
+    defSize: PHONE_W,
+  },
+  miniProgramHeader: {
+    label: "Mini Program Header",
+    noun: "ミニプログラムのヘッダー",
+    category: "navigation",
+    paletteIcon: "smartphone",
+    w: PHONE_W,
+    h: 88,
+    radius: 0,
+    hasVariant: false,
+    hasLabel: true,
+    hasSupporting: true,
+    hasContent: true,
+    hasPadding: true,
+    hasIcon: false,
+    size: { min: 200, max: PHONE_W, step: 4, icon: "width", presets: WIDTH_PRESETS },
+    defLabel: "タイトル",
+    defIcon: null,
+    defSupporting: "9:41",
+    defContent: "中间内容",
     defSize: PHONE_W,
   },
   bottomNav: {
@@ -1128,6 +1153,7 @@ export const KIND_ORDER: Kind[] = [
   "fabMenu",
   "chip",
   "topAppBar",
+  "miniProgramHeader",
   "bottomNav",
   "navRail",
   "toolbar",
@@ -1166,6 +1192,11 @@ export type Item = {
   icon2?: string | null;
   variant: Variant;
   supporting?: string;
+  /** free text inside a mini program header, below the title */
+  content?: string;
+  /** mini program header vertical insets, in dp */
+  topPadding?: number;
+  bottomPadding?: number;
   size?: number;
   radiusTop?: number;
   radiusBottom?: number;
@@ -1378,7 +1409,7 @@ export const frameRect = (f: Frame) => {
 export const frameRadius = (f: Frame) => (isPhoneFrame(f) ? PHONE_R : DESKTOP_R);
 
 /** parts that span the screen edge to edge and follow its width when it changes */
-export const FULL_WIDTH: Kind[] = ["topAppBar", "bottomNav", "tabs"];
+export const FULL_WIDTH: Kind[] = ["topAppBar", "miniProgramHeader", "bottomNav", "tabs"];
 
 /** a part no taller than the screen it is placed on: a box or a rail sized to a phone shrinks to a shorter screen */
 export function fitHeight(it: Item, screenH: number): Item {
@@ -1599,6 +1630,7 @@ export function makeItem(kind: Kind): Item {
     variant: s.defVariant ?? "filled",
   };
   if (s.defSupporting !== undefined) it.supporting = text?.supporting ?? s.defSupporting;
+  if (s.defContent !== undefined) it.content = text?.content ?? s.defContent;
   if (s.defIcon2 !== undefined) it.icon2 = s.defIcon2;
   if (s.defSize !== undefined) it.size = s.defSize;
   if (s.hasChecked) it.checked = kind !== "chip" && kind !== "box";
@@ -1676,6 +1708,7 @@ export function sizeOf(it: Item, widths: Record<string, number>) {
       /* the status-bar inset belongs to a phone: a bar wider than one has no status bar above it.
        * (An Android tablet does; the canvas leaves that to the prompt.) */
       return { w: n, h: 64 + (n > PHONE_W ? 0 : STATUS_BAR_H) };
+    case "miniProgramHeader":
     case "searchBar":
     case "bottomNav":
     case "listItem":
@@ -1704,6 +1737,7 @@ export function baseRadii(it: Item): Radii {
     case "box":
       if (it.corners) return { ...it.corners };
     // falls through
+    case "miniProgramHeader":
     case "bottomNav":
     case "topAppBar":
     case "tabs": {

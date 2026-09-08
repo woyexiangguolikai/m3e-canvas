@@ -99,6 +99,7 @@ Sizes are in dp; `size` is the width unless noted. Content width inside the phon
 | kind | what it is | useful fields | default size |
 |---|---|---|---|
 | `topAppBar` | top app bar | `label` title, `icon` leading, `icon2` trailing, `actions` with keys `icon` / `icon2` | 412 × 88, at the top |
+| `miniProgramHeader` | mini program top capsule area | `label` title, `supporting` time, `content` a short middle line, `topPadding` / `bottomPadding` 0–24dp (default 6dp); the bar itself shows signal, Wi-Fi, battery and a 84×32dp capsule at the right | 412 × 88, at the top |
 | `bottomNav` | navigation bar | `tabs` (3–5 of `{icon,label}`), `selected` index, `actions` with keys `tab:0`… | 412 × 104, at the bottom |
 | `navRail` | navigation rail (desktop) | `tabs`, `selected`, `railExpanded` false / true for M3 Expressive collapsed / expanded, `railModal` for modal expansion, `size2` height | 96 collapsed / 220 expanded; omit both rail fields for the original 80-wide rail |
 | `tabs` | tab row | `tabs`, `selected` | 412 × 48 |

@@ -246,9 +246,42 @@ export async function draftDesign(s: AiSettings, guide: string, idea: string, la
     "",
     guide,
   ].join("\n");
-  const user = [`Sketch this app: ${idea.trim()}`, `Write every label, title and note in ${LANG_NAME[lang]}.`, "Three to five screens. Keep it simple."].join("\n");
-  const j = parseJsonObject(await complete(s, system, user, signal, 12000));
-  if (!isProject(j)) throw new Error("json");
-  return j;
+  const user = (compact: boolean) =>
+    [
+      `Sketch this app: ${idea.trim()}`,
+      `Write every label, title and note in ${LANG_NAME[lang]}.`,
+      compact
+        ? "Draw only two screens with the fewest parts that show the idea. Keep labels short, omit optional fields, and reuse the guide's minimal examples."
+        : "Draw three to five screens. Keep the parts simple.",
+    ].join("\n");
+  const minimalUser = [
+    `Sketch this app: ${idea.trim()}`,
+    `Write every label, title and note in ${LANG_NAME[lang]}.`,
+    "Draw ONE phone screen only. Use exactly these kinds, in this order, and no other parts:",
+    "1. topAppBar with a short app title (icon: menu, icon2: search)",
+    "2. text with one short line that explains the app",
+    "3. button with a short action label (icon: arrow_forward)",
+    "Keep every other field out; omit notes, tabs, actions and optional theme keys.",
+  ].join("\n");
+  const draft = async (prompt: string, budget: number) => {
+    const j = parseJsonObject(await complete(s, system, prompt, signal, budget));
+    if (!isProject(j)) throw new Error("json");
+    return j;
+  };
+  const attempts = [
+    { prompt: user(false), budget: 12000 },
+    { prompt: user(true), budget: 16000 },
+    { prompt: minimalUser, budget: 16000 },
+  ];
+  let lastError: unknown;
+  for (const attempt of attempts) {
+    try {
+      return await draft(attempt.prompt, attempt.budget);
+    } catch (e) {
+      const m = e instanceof Error ? e.message : "";
+      if (m !== "long" || signal?.aborted) throw e;
+      lastError = e;
+    }
+  }
+  throw lastError;
 }
-

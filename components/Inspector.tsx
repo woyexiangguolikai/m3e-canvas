@@ -872,7 +872,7 @@ export function Inspector({
 
       {onAlign && !editOn && <AlignSection single onAlign={onAlign} p={p} />}
 
-      {(spec.hasLabel || spec.hasSupporting) && (
+      {(spec.hasLabel || spec.hasSupporting || spec.hasContent) && (
         <Section id="text" icon="title" title={t("text", lang)} p={p}>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {spec.hasLabel && (
@@ -905,6 +905,46 @@ export function Inspector({
                 icon="notes"
               />
             )}
+            {spec.hasContent && !editOn && (
+              <Field
+                value={item.content ?? ""}
+                onChange={(content) => onChange({ content: content.trim() ? content : undefined })}
+                placeholder={t("content", lang)}
+                p={p}
+                icon="notes"
+                multiline
+                rows={2}
+              />
+            )}
+          </div>
+        </Section>
+      )}
+
+      {spec.hasPadding && !editOn && (
+        <Section id="mini-padding" icon="space_bar" title={t("padding", lang)} p={p}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <Slider
+              icon="vertical_align_top"
+              title={t("paddingTop", lang)}
+              value={item.topPadding ?? 6}
+              min={0}
+              max={24}
+              step={1}
+              onChange={(topPadding) => onChange({ topPadding })}
+              p={p}
+              unit="dp"
+            />
+            <Slider
+              icon="vertical_align_bottom"
+              title={t("paddingBottom", lang)}
+              value={item.bottomPadding ?? 6}
+              min={0}
+              max={24}
+              step={1}
+              onChange={(bottomPadding) => onChange({ bottomPadding })}
+              p={p}
+              unit="dp"
+            />
           </div>
         </Section>
       )}

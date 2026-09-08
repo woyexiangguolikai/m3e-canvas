@@ -40,7 +40,9 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400..700,0..1,0&display=block"
         />
       </head>
-      <body style={{ fontFamily: "Roboto, system-ui, sans-serif" }}>{children}</body>
+      {/* Browser extensions (e.g. DemoWay) may add data-* attributes before hydration;
+          React should not log a mismatch for attributes that are not part of the app. */}
+      <body suppressHydrationWarning style={{ fontFamily: "Roboto, system-ui, sans-serif" }}>{children}</body>
     </html>
   );
 }

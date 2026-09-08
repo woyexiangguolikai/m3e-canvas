@@ -156,7 +156,7 @@ function rowsOf(units: Unit[]): Unit[][] {
 }
 
 const isRail = (u: Unit) => u.kind === "navRail";
-const isTop = (u: Unit) => u.kind === "topAppBar" || u.kind === "tabs";
+const isTop = (u: Unit) => u.kind === "topAppBar" || u.kind === "miniProgramHeader" || u.kind === "tabs";
 const isBottomBar = (u: Unit) => u.kind === "bottomNav" || (u.kind === "box" && !!u.checked);
 const isFloatingBottom = (u: Unit) => u.kind === "toolbar" || u.kind === "snackbar";
 const isFab = (u: Unit) => u.kind === "fab" || u.kind === "extendedFab" || u.kind === "fabMenu";

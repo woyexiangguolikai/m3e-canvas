@@ -30,7 +30,7 @@ export const SEED_TEXT: Record<Lang, { favorite: string; share: string; inbox: s
 };
 
 /** ponytail: matches defaults by text; add provenance if authored copies must be distinguished. */
-export function translateDefaultText(value: string, kind: string, field: "label" | "supporting" | "tab", lang: Lang): string {
+export function translateDefaultText(value: string, kind: string, field: "label" | "supporting" | "content" | "tab", lang: Lang): string {
   for (const { key: from } of LANGS) {
     if (field === "tab") {
       const labels = (l: Lang) => kind === "tabs" ? TAB_LABELS[l] : kind === "select" ? SELECT_OPTIONS[l] : (kind === "fabMenu" ? FAB_MENU_TABS[l] : NAV_TABS[l]).map((tab) => tab.label);
@@ -167,6 +167,10 @@ export const UI = {
   bold: { ja: "太字", en: "Bold", zh: "粗体" },
   action: { ja: "アクション", en: "Action", zh: "操作" },
   supporting: { ja: "サブテキスト", en: "Supporting text", zh: "辅助文本" },
+  content: { ja: "中間コンテンツ", en: "Middle content", zh: "中间内容" },
+  padding: { ja: "余白", en: "Padding", zh: "内边距" },
+  paddingTop: { ja: "上余白", en: "Top padding", zh: "顶部内边距" },
+  paddingBottom: { ja: "下余白", en: "Bottom padding", zh: "底部内边距" },
   tabs: { ja: "項目", en: "Items", zh: "项目" },
   options: { ja: "選択肢", en: "Options", zh: "选项" },
   addOption: { ja: "選択肢を追加", en: "Add an option", zh: "添加选项" },
@@ -437,7 +441,7 @@ export const KO: Record<UIKey, string> = {
   reload: "새로고침",
   copied: "복사됨", saveImage: "이미지로 저장", saving: "저장 중…", previewFrom: "이 화면부터 미리보기",
   duplicate: "복제", duplicateKey: "복제 (Ctrl+D)", delete: "삭제 (Delete)", deleteSelection: "선택 항목 삭제",
-  text: "텍스트", label: "레이블", bold: "굵게", action: "동작", supporting: "보조 텍스트", tabs: "항목", changeIcon: "아이콘 변경",
+  text: "텍스트", label: "레이블", bold: "굵게", action: "동작", supporting: "보조 텍스트", content: "중간 콘텐츠", padding: "여백", paddingTop: "위쪽 여백", paddingBottom: "아래쪽 여백", tabs: "항목", changeIcon: "아이콘 변경",
   options: "옵션", addOption: "옵션 추가", removeOption: "이 옵션 삭제", selectedOption: "초깃값으로 설정(다시 누르면 선택 해제)", image: "이미지", pickImage: "이미지 선택", removeImage: "이미지 제거", imageUrl: "이미지 URL", imageArea: "이미지 영역", autoWidth: "글자 너비", icon: "아이콘", noIcon: "아이콘 없음", searchIcons: "아이콘 검색",
   style: "스타일", state: "상태", selected: "선택됨", handle: "핸들(하단 시트)", listSwitch: "끝에 스위치", on: "켜짐", container: "컨테이너", wavy: "물결 모양", determinate: "확정형",
   railState: "레일 표시", railCollapsed: "접힘", railExpanded: "펼침",
@@ -482,7 +486,7 @@ export const t = (key: UIKey, lang: Lang = current): string => (lang === "ko" ? 
 
 export const KIND_TEXT: Record<
   Lang,
-  Record<string, { noun: string; label?: string; supporting?: string }>
+  Record<string, { noun: string; label?: string; supporting?: string; content?: string }>
 > = {
   ja: {
     box: { noun: "ボックス" },
@@ -492,6 +496,7 @@ export const KIND_TEXT: Record<
     extendedFab: { noun: "拡張 FAB", label: "作成" },
     chip: { noun: "チップ", label: "チップ" },
     topAppBar: { noun: "トップアプリバー", label: "タイトル" },
+    miniProgramHeader: { noun: "ミニプログラムのヘッダー", label: "タイトル", supporting: "9:41", content: "ここに中間コンテンツ" },
     bottomNav: { noun: "ナビゲーションバー" },
     navRail: { noun: "ナビゲーションレール" },
     searchBar: { noun: "検索バー", label: "検索" },
@@ -527,6 +532,7 @@ export const KIND_TEXT: Record<
     extendedFab: { noun: "extended FAB", label: "Create" },
     chip: { noun: "chip", label: "Chip" },
     topAppBar: { noun: "top app bar", label: "Title" },
+    miniProgramHeader: { noun: "mini program header", label: "Title", supporting: "9:41", content: "Middle content" },
     bottomNav: { noun: "navigation bar" },
     navRail: { noun: "navigation rail" },
     searchBar: { noun: "search bar", label: "Search" },
@@ -562,6 +568,7 @@ export const KIND_TEXT: Record<
     extendedFab: { noun: "扩展 FAB", label: "新建" },
     chip: { noun: "标签片", label: "标签" },
     topAppBar: { noun: "顶部应用栏", label: "标题" },
+    miniProgramHeader: { noun: "小程序顶部胶囊区", label: "标题", supporting: "9:41", content: "中间内容" },
     bottomNav: { noun: "导航栏" },
     navRail: { noun: "侧边导航栏" },
     searchBar: { noun: "搜索栏", label: "搜索" },
@@ -597,6 +604,7 @@ export const KIND_TEXT: Record<
     extendedFab: { noun: "확장 FAB", label: "만들기" },
     chip: { noun: "칩", label: "칩" },
     topAppBar: { noun: "상단 앱 바", label: "제목" },
+    miniProgramHeader: { noun: "미니 프로그램 헤더", label: "제목", supporting: "9:41", content: "중간 콘텐츠" },
     bottomNav: { noun: "내비게이션 바" },
     navRail: { noun: "내비게이션 레일" },
     searchBar: { noun: "검색창", label: "검색" },

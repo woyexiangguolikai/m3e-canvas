@@ -11,6 +11,7 @@ export function aiErrorText(e: unknown, lang: ReturnType<typeof useLang>): strin
   const m = e instanceof Error ? e.message : String(e);
   if (m === "refusal") return t("aiErrorRefusal", lang);
   if (m === "json" || m === "empty") return t("aiErrorJson", lang);
+  if (m === "long") return t("aiErrorLong", lang);
   if (m === "model") return t("aiErrorModel", lang);
   if (m === "insecure") return t("aiErrorInsecure", lang);
   if (/failed to fetch|networkerror|load failed/i.test(m)) return t("aiErrorNetwork", lang);

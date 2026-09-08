@@ -104,6 +104,8 @@ function itemJa(it: Item): string {
       return `${q(it.label)}のチップ${it.checked ? "（選択状態）" : ""}${it.icon && !it.checked ? `（${it.icon} アイコン付き）` : ""}`;
     case "topAppBar":
       return `タイトル${q(it.label)}のトップアプリバー${it.icon ? `。左に ${it.icon}` : ""}${it.icon2 ? `、右に ${it.icon2}` : ""}${it.icon || it.icon2 ? " のアイコンボタン" : ""}`;
+    case "miniProgramHeader":
+      return `タイトルが${q(it.label)}のミニプログラムヘッダー。上部のステータスバーには左に時間（${q(it.supporting || "9:41")}）、右に電波・Wi-Fi・バッテリーを表示し、右上に丸いキャプセルボタンを置く${hasText(it.content) ? `。中間コンテンツは${q(it.content!)}` : ""}。上下余白は${it.topPadding ?? 6}dp／${it.bottomPadding ?? 6}dp`;
     case "bottomNav": {
       const tabs = (it.tabs ?? []).map((t) => `${q(t.label || "ラベルなし")}(${t.icon || "アイコンなし"})`);
       return `${tabs.length}項目のナビゲーションバー（${tabs.join("、")}。${selectedText(it, "ja")}）`;
@@ -195,6 +197,8 @@ function itemEn(it: Item): string {
       return `a chip ${q(it.label)}${it.checked ? " (selected)" : ""}${it.icon && !it.checked ? ` with a ${it.icon} icon` : ""}`;
     case "topAppBar":
       return `a top app bar titled ${q(it.label)}${it.icon ? ` with a ${it.icon} icon button on the left` : ""}${it.icon2 ? `${it.icon ? " and" : " with"} ${it.icon2} on the right` : ""}`;
+    case "miniProgramHeader":
+      return `a mini program header titled ${q(it.label)}, with a status bar showing ${q(it.supporting || "9:41")} on the left and signal, Wi-Fi and battery on the right, plus a rounded capsule button at the top-right${hasText(it.content) ? `; middle content: ${q(it.content!)}` : ""}; vertical padding ${it.topPadding ?? 6}dp / ${it.bottomPadding ?? 6}dp`;
     case "bottomNav": {
       const tabs = (it.tabs ?? []).map((t) => `${q(t.label || "unlabeled")} (${t.icon || "no icon"})`);
       return `a navigation bar with ${tabs.length} destinations: ${tabs.join(", ")}; ${selectedText(it, "en")}`;
@@ -286,6 +290,8 @@ function itemZh(it: Item): string {
       return `${q(it.label)}标签片${it.checked ? "（选中状态）" : ""}${it.icon && !it.checked ? `（带 ${it.icon} 图标）` : ""}`;
     case "topAppBar":
       return `标题为${q(it.label)}的顶部应用栏${it.icon ? `，左侧是 ${it.icon}` : ""}${it.icon2 ? `，右侧是 ${it.icon2}` : ""}${it.icon || it.icon2 ? " 图标按钮" : ""}`;
+    case "miniProgramHeader":
+      return `标题为${q(it.label)}的小程序顶部胶囊区：状态栏左侧显示时间（${q(it.supporting || "9:41")}），右侧显示信号、Wi-Fi 和电池图标，右上角放小程序圆形胶囊按钮${hasText(it.content) ? `，中间内容为${q(it.content!)}` : ""}；顶部内边距 ${it.topPadding ?? 6}dp，底部内边距 ${it.bottomPadding ?? 6}dp`;
     case "bottomNav": {
       const tabs = (it.tabs ?? []).map((t) => `${q(t.label || "无标签")}(${t.icon || "无图标"})`);
       return `${tabs.length}个项目的导航栏（${tabs.join("、")}，${selectedText(it, "zh")}）`;
@@ -371,6 +377,7 @@ function itemKo(it: Item): string {
     case "extendedFab": return `${q(it.label)}${it.icon ? ` 및 ${it.icon} 아이콘` : ""} 확장 FAB(${v})`;
     case "chip": return `${q(it.label)} 칩${it.checked ? "(선택됨)" : ""}${it.icon && !it.checked ? `(${it.icon} 아이콘 포함)` : ""}`;
     case "topAppBar": return `제목이 ${q(it.label)}인 상단 앱 바${it.icon ? `, 왼쪽 ${it.icon}` : ""}${it.icon2 ? `, 오른쪽 ${it.icon2}` : ""}${it.icon || it.icon2 ? " 아이콘 버튼" : ""}`;
+    case "miniProgramHeader": return `제목이 ${q(it.label)}인 미니 프로그램 헤더. 상단 상태 표시줄 왼쪽에 시간(${q(it.supporting || "9:41")}), 오른쪽에 신호/ Wi-Fi/배터리 아이콘을 표시하고 오른쪽 위에 둥근 캡슐 버튼을 둔다${hasText(it.content) ? `, 중간 콘텐츠는 ${q(it.content!)}` : ""}. 위아래 여백은 ${it.topPadding ?? 6}dp / ${it.bottomPadding ?? 6}dp`;
     case "bottomNav": {
       const tabs = (it.tabs ?? []).map((t) => `${q(t.label || "레이블 없음")}(${t.icon || "아이콘 없음"})`);
       return `${tabs.length}개 항목의 내비게이션 바(${tabs.join(", ")}, ${selectedText(it, "ko")})`;
@@ -845,6 +852,8 @@ const STYLE_NOTES: Record<Lang, Partial<Record<Kind | "boxSheet", string>>> = {
     chip: "チップ: 高さ 32dp、角丸 8dp。選択状態は secondaryContainer で塗り、先頭にチェックアイコンを出す。横並びのチップグループは 8dp 間隔で、はみ出す場合は横スクロール。",
     topAppBar:
       "トップアプリバー: 高さ 64dp、背景は surface。背景はステータスバーの後ろまで伸ばし、その分（システムインセット）だけ上に余白を取る。タイトルは titleLarge、左右のアイコンボタンは 48dp。スクロール時に surfaceContainer へ色が変わる標準の挙動でよい。",
+    miniProgramHeader:
+      "ミニプログラムヘッダー: 高さ 88dp、幅は画面いっぱい。上 24dp にステータスバー（左に指定の時刻、右に電波・Wi-Fi・バッテリー）、下にタイトル、指定された中間コンテンツ、右端の 84×32dp のキャプセルボタン（丸いインジケータ、縦線、3 つのドット）を配置する。上下の余白は指定値（既定 6dp）を使う。背景は surface、文字は onSurface。",
     bottomNav:
       "ナビゲーションバー: 高さ 80dp、背景は surfaceContainer。背景は画面下端のジェスチャーナビゲーション領域まで伸ばし、その分（システムインセット）だけ下に余白を取る。選択中の項目は secondaryContainer のピル型インジケータ（幅 64dp・高さ 32dp）で示し、アイコンは塗りつぶし、ラベルは labelMedium。",
     navRail:
@@ -894,6 +903,8 @@ const STYLE_NOTES: Record<Lang, Partial<Record<Kind | "boxSheet", string>>> = {
     chip: "Chips: 32dp tall, 8dp corners. The selected state fills with secondaryContainer and shows a leading check icon. A chip group is a row with 8dp gaps that scrolls horizontally when it overflows.",
     topAppBar:
       "Top app bar: 64dp tall on surface, with its background extended behind the status bar (pad the top by the system inset). Title in titleLarge, 48dp icon buttons on each side. The standard tint to surfaceContainer on scroll is fine.",
+    miniProgramHeader:
+      "Mini program header: 88dp tall and full width. A 24dp status bar at the top shows the given time on the left and signal, Wi-Fi and battery on the right; below it place the title, the given middle content and a 84×32dp capsule button at the right (round indicator, hairline divider, three dots). Use the specified top and bottom padding (default 6dp). Background surface, text onSurface.",
     bottomNav:
       "Navigation bar: 80dp tall on surfaceContainer, with its background extended down through the gesture navigation area (pad the bottom by the system inset). The active destination shows a secondaryContainer pill indicator (64×32dp), a filled icon and a labelMedium label.",
     navRail:
@@ -942,6 +953,8 @@ const STYLE_NOTES: Record<Lang, Partial<Record<Kind | "boxSheet", string>>> = {
     chip: "标签片：高 32dp，圆角 8dp。选中状态用 secondaryContainer 填充并在前面显示勾选图标。横向标签片组间距 8dp，溢出时横向滚动。",
     topAppBar:
       "顶部应用栏：高 64dp，背景为 surface。背景延伸到状态栏后面，并按系统内边距在顶部留出空间。标题用 titleLarge，左右图标按钮 48dp。滚动时变为 surfaceContainer 的标准行为即可。",
+    miniProgramHeader:
+      "小程序顶部胶囊区：高 88dp，宽度铺满屏幕。顶部 24dp 为状态栏（左侧显示指定时间，右侧显示信号、Wi-Fi 和电池图标）；下方放标题、指定的中间内容和右上角的 84×32dp 胶囊按钮（圆点、细竖线、三个圆点）。使用指定顶部／底部内边距（默认 6dp）。背景为 surface，文字为 onSurface。",
     bottomNav:
       "导航栏：高 80dp，背景为 surfaceContainer。背景延伸到屏幕底部的手势导航区域，并按系统内边距在底部留出空间。选中项用 secondaryContainer 的胶囊指示器（宽 64dp、高 32dp）表示，图标为填充样式，标签用 labelMedium。",
     navRail:
@@ -987,6 +1000,7 @@ const STYLE_NOTES: Record<Lang, Partial<Record<Kind | "boxSheet", string>>> = {
     extendedFab: "확장 FAB: 높이 56dp, 모서리 16dp, 왼쪽에 아이콘, 오른쪽에 레이블을 둔다.",
     chip: "칩: 높이 32dp, 모서리 8dp. 선택 상태는 secondaryContainer로 채우고 앞쪽에 체크 아이콘을 표시한다. 칩 그룹은 간격 8dp로 가로 배치하고 넘치면 가로 스크롤한다.",
     topAppBar: "상단 앱 바: 높이 64dp, 배경 surface. 상태 표시줄 뒤까지 배경을 늘리고 시스템 인셋만큼 위쪽 여백을 둔다. 제목은 titleLarge, 양쪽 아이콘 버튼은 48dp를 사용한다.",
+    miniProgramHeader: "미니 프로그램 헤더: 높이 88dp, 화면 전체 너비. 위쪽 24dp 상태 표시줄(왼쪽 지정 시간, 오른쪽 신호/Wi-Fi/배터리) 아래에 제목, 지정된 중간 콘텐츠와 오른쪽 84×32dp 캡슐 버튼(원형 인디케이터, 얇은 구분선, 점 3개)을 배치한다. 위아래 여백은 지정값(기본 6dp)을 사용한다. 배경 surface, 텍스트 onSurface.",
     bottomNav: "내비게이션 바: 높이 80dp, 배경 surfaceContainer. 제스처 내비게이션 영역까지 배경을 늘리고 시스템 인셋만큼 아래쪽 여백을 둔다. 선택 항목은 64×32dp secondaryContainer 알약 표시기, 채운 아이콘, labelMedium 레이블로 표시한다.",
     searchBar: "검색창: 높이 56dp, 완전 둥근 모서리, 배경 surfaceContainerHigh. 앞쪽 검색 아이콘과 지정된 뒤쪽 아이콘을 둔다.",
     card: "카드: 모서리 20dp, 위쪽 이미지 영역. 채움은 surfaceContainerHighest, 돌출은 surfaceContainerLow와 Level 1 그림자, 윤곽선은 1dp outlineVariant 테두리를 사용한다. 제목 titleMedium, 본문 bodyMedium, 안쪽 여백 16dp.",

@@ -13,6 +13,8 @@ const validTabs = (tabs: unknown) =>
 
 const validCorners = (c: unknown) => c === undefined || (isRecord(c) && ["tl", "tr", "bl", "br"].every((k) => Number.isFinite(c[k])));
 
+const validPadding = (v: unknown): v is number => typeof v === "number" && Number.isFinite(v) && v >= 0 && v <= 48;
+
 const validItem = (item: unknown) =>
   isRecord(item) &&
   validCorners(item.corners) &&
@@ -26,6 +28,9 @@ const validItem = (item: unknown) =>
   (typeof item.icon === "string" || item.icon === null) &&
   VARIANTS.some((variant) => variant.key === item.variant) &&
   (item.supporting === undefined || typeof item.supporting === "string") &&
+  (item.content === undefined || typeof item.content === "string") &&
+  (item.topPadding === undefined || validPadding(item.topPadding)) &&
+  (item.bottomPadding === undefined || validPadding(item.bottomPadding)) &&
   (item.selected === undefined || Number.isFinite(item.selected)) &&
   (item.note === undefined || typeof item.note === "string") &&
   validTabs(item.tabs);

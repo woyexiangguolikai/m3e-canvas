@@ -464,6 +464,61 @@ function Body({ item, p }: { item: Item; p: Palette }) {
         </div>
       );
 
+    case "miniProgramHeader":
+      return (
+        <div
+          style={{
+            height: "100%",
+            boxSizing: "border-box",
+            padding: `${Math.max(0, item.topPadding ?? 6)}px 16px ${Math.max(0, item.bottomPadding ?? 6)}px`,
+            display: "flex",
+            flexDirection: "column",
+            color: p.onSurface,
+          }}
+        >
+          <div style={{ height: 24, display: "flex", alignItems: "center", fontSize: 12, fontWeight: 500 }}>
+            <span>{item.supporting || "9:41"}</span>
+            <span style={{ flex: 1 }} />
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 5, color: p.onSurfaceVariant }}>
+              <Icon name="signal_cellular_alt" size={12} />
+              <Icon name="wifi" size={13} />
+              <Icon name="battery_5_bar" size={16} />
+            </span>
+          </div>
+          <div style={{ flex: 1, minWidth: 0, display: "flex", alignItems: "center", gap: 10 }}>
+            <span style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", justifyContent: "center", gap: 3 }}>
+              <span style={{ fontSize: 16, fontWeight: w(600, 700), ...ellipsis }}>{item.label}</span>
+              {!!item.content?.trim() && (
+                <span style={{ fontSize: 11, color: p.onSurfaceVariant, ...ellipsis }}>{item.content}</span>
+              )}
+            </span>
+            <span
+              aria-hidden
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 6,
+                width: 84,
+                height: 32,
+                borderRadius: 16,
+                background: p.inverseSurface,
+                color: p.inverseOnSurface,
+                flex: "0 0 auto",
+              }}
+            >
+              <span style={{ width: 14, height: 14, borderRadius: "50%", border: "1.5px solid currentColor", boxSizing: "border-box" }} />
+              <span style={{ width: 1, height: 16, background: "currentColor", opacity: 0.55 }} />
+              <span style={{ display: "inline-flex", gap: 3 }}>
+                {[0, 1, 2].map((i) => (
+                  <span key={i} style={{ width: 3, height: 3, borderRadius: "50%", background: "currentColor" }} />
+                ))}
+              </span>
+            </span>
+          </div>
+        </div>
+      );
+
     case "searchBar":
       return (
         <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "0 16px", height: "100%" }}>
@@ -1212,6 +1267,7 @@ function boxStyle(item: Item, p: Palette): React.CSSProperties {
         ? { background: p.surfaceContainerHighest, border: "none", color: p.onSurface }
         : { background: p.surface, border: `1px solid ${p.outline}`, color: p.onSurface };
     case "topAppBar":
+    case "miniProgramHeader":
     case "bottomNav":
     case "navRail":
       return { background: p.surfaceContainer, border: "none", color: p.onSurface };
